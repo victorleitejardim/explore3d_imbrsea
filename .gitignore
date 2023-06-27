@@ -1,0 +1,10 @@
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+*.Rproj
+.index_cache/
+.index_files/
+.Rplots.pdf
+.Renviron

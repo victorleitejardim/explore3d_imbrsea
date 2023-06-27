@@ -1,0 +1,109 @@
+---
+title: "3D Exploration Workshop IMBRSea "
+author: Victor L. Jardim
+format:
+  html:
+    toc: true
+    toc-title: Contents
+    toc-location: left
+    toc-depth: 5
+    theme: minty
+    self-contained: true
+    embed-resources: true
+    code-fold: show
+    code-overflow: wrap
+    code-tools: true
+    fig-align: center
+    tbl-cap-location: top
+    fig-cap-location: bottom
+    page-layout: full
+    sidebar: true
+editor_options: 
+  chunk_output_type: console  
+execute: 
+  cache: refresh
+  eval: false
+engine: knitr
+---
+
+# Getting started
+
+First, let's be sure we have all the dependencies for the necessary packages.
+
+First, make sure [PANDOC](https://pandoc.org/installing.html) is installed
+
+If you are using windows, you will need [Rtools](https://cran.r-project.org/bin/windows/Rtools/)
+
+If you are using OSX, please install [XCODE](https://apps.apple.com/us/app/xcode/id497799835?mt=12)
+
+OSX: Install XCODE. <https://apps.apple.com/us/app/xcode/id497799835?mt=12> 
+
+DEBIAN/UBUNTU: Install prerequisites (needed to build dependency package sf). At a terminal:
+
+> sudo apt install libudunits2-dev libgeos-dev
+
+Install the necessary packages
+
+```{r}
+install.packages("devtools")
+devtools::install_github("zarquon42b/Morpho")
+devtools::install_github("zarquon42b/Rvcg", local=FALSE)
+devtools::install_github("kisungyou/Rdimtools")
+devtools::install_github("geomorphR/geomorph", ref = "Stable", build_vignettes = TRUE)
+install.packages("here") #relative paths
+```
+
+I also highly recommend you install dplyr and tidyr. I will personally by using tidy coding, but you are of course all free to code using base r.
+
+Load all necessary packages:
+
+```{r}
+#| warning: false
+#| message: false
+library(here) #use relative paths to avoid reproductibily problems
+library(dplyr)
+library(tidyr)
+library(ggplot2) 
+library(Rdimtools)
+library(geomorph)
+library(Morpho)
+library(Rvcg)
+```
+
+# Exercise 1. Loading files
+
+## a) There are several 3d mesh file formats. For the first exercise, let's open a .ply file 
+
+```{r}
+ply1 <- Morpho::ply2mesh(filename = here::here("data", "raw-data", "MRZ101.ply"))
+rgl::plot3d(ply1)
+```
+
+Check the help page of that function and play with the parameters.
+
+## b) Now, try to create a function that opens all .ply files in your folder. 
+
+~[tip:\ check\ the\ list.files()\ and\ sapply()\ functions]{.smallcaps}~
+
+## c) Do the same with the .obj files
+
+# Starting to measure things
+
+### Check the structure of the data
+
+```{r}
+ply1$vb[,1:12]
+ply1$it[,1:12]
+ply1$primitivetype
+ply1$material
+ply1$normals[, 1:12]
+```
+
+We will see soon that for some of the analysis we might need to transform the data.
+
+Let's start with the basics, volume and surface. Look at the help function of the following files:
+
+```{r}
+Rvcg::vcgVolume() #get volume
+Rvcg::vcgArea() #get surface area
+```
